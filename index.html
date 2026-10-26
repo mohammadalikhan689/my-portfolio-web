@@ -178,6 +178,41 @@ html.lenis,html.lenis body{height:auto}
 .tg li b{font:800 clamp(1.8rem,3.6vw,3.4rem)/1 var(--display);letter-spacing:-.03em}
 .tg li small{font:500 .95rem/1 var(--body);opacity:.6;text-align:right}
 .tg li:hover{color:var(--accent);padding-left:.6rem}
+.tband{overflow:hidden;margin:0 -5vw 3rem;padding:.5rem 0}
+.tband .sr{font-size:clamp(3rem,9vw,8rem)}
+.tb2{color:transparent;-webkit-text-stroke:2px var(--fg);margin-top:.4rem}
+.cband{overflow:hidden;margin:0 -5vw;padding:.6rem 0;border-block:2px solid #141C10}
+.cband .sr{font-size:clamp(2.4rem,6.5vw,6rem)}
+.cband .sr span::after{background:#141C10}
+.cb2{color:transparent;-webkit-text-stroke:2px #141C10}
+.cform{position:fixed;inset:0;z-index:85;background:var(--bg);color:var(--fg);overflow-y:auto;overscroll-behavior:contain;visibility:hidden;clip-path:circle(0% at 50% 50%)}
+.cform.open{visibility:visible}
+.cf-wrap{max-width:1200px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 7rem) 5vw 5rem;display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(2rem,6vw,6rem);align-items:start}
+.cf-title{font-size:clamp(3.4rem,9vw,8.5rem)}
+.cf-direct{margin-top:2rem;opacity:.85}
+.cf-direct a{color:var(--accent);border-bottom:1px solid currentColor;overflow-wrap:anywhere}
+.cf-form{display:flex;flex-direction:column;gap:1.6rem}
+.cf-types{border:0;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:.6rem}
+.cf-types legend{font:600 .8rem/1 var(--body);letter-spacing:.08em;text-transform:uppercase;opacity:.65;margin-bottom:.9rem;padding:0;float:left;width:100%}
+.cf-types label{position:relative}
+.cf-types input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.cf-types span{display:block;border:2px solid var(--fg);border-radius:999px;padding:.7rem 1.2rem;font:600 1rem/1 var(--body);transition:background .25s,color .25s,border-color .25s,transform .25s}
+.cf-types label:hover span{transform:translateY(-2px)}
+.cf-types input:checked+span{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.cf-types input:focus-visible+span{outline:3px solid var(--pop);outline-offset:3px}
+.cf-field{position:relative}
+.cf-field input,.cf-field textarea{width:100%;background:transparent;border:0;border-bottom:2px solid var(--line);color:var(--fg);font:500 1.25rem/1.4 var(--body);padding:1.4rem 0 .6rem;border-radius:0;outline:0;resize:vertical;transition:border-color .3s}
+.cf-field label{position:absolute;left:0;top:1.4rem;font:500 1.1rem/1 var(--body);opacity:.6;pointer-events:none;transition:transform .25s,opacity .25s,color .25s;transform-origin:left top}
+.cf-field input:focus,.cf-field textarea:focus{border-color:var(--accent)}
+.cf-field input:focus+label,.cf-field textarea:focus+label,.cf-field input:not(:placeholder-shown)+label,.cf-field textarea:not(:placeholder-shown)+label{transform:translateY(-1.2rem) scale(.78);opacity:1;color:var(--accent)}
+.cf-field.err input,.cf-field.err textarea{border-color:#FF8A73}
+.cf-hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+.cf-actions{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-top:.5rem}
+.cf-actions .dl{border:0;cursor:pointer}
+.cf-status{font-weight:500;color:var(--accent)}
+.cf-note{margin:0;font-size:.95rem;opacity:.75}
+.cf-copy{background:none;border:0;color:var(--accent);font:inherit;text-decoration:underline;cursor:pointer;padding:0}
+@media (max-width:819px){.cf-wrap{grid-template-columns:1fr}}
 @media (max-width:819px){.tg-grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.tg li{transition:none}}
 .chips{display:flex;flex-wrap:wrap;gap:1rem}
@@ -208,7 +243,7 @@ html.lenis,html.lenis body{height:auto}
 .ct-btn.ghost{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 2px rgba(242,240,234,.45)}
 .ct-btn.ghost:hover,.ct-btn.ghost:focus-visible{color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent);filter:none}
 .ct-live{font-size:.9rem;color:var(--accent);min-width:5ch}
-.cta{transition:opacity .3s,transform .3s}body.in-contact .cta{opacity:0;pointer-events:none;transform:translateY(-8px)}
+.cta{transition:opacity .3s,transform .3s,filter .3s,box-shadow .3s}body.in-contact .cta{opacity:0;pointer-events:none;transform:translateY(-8px)}
 .contact a:focus-visible,.contact button:focus-visible{outline:3px solid #141C10;outline-offset:4px}
 .ct-card a:focus-visible,.ct-card button:focus-visible{outline-color:var(--accent)}
 @media (max-width:819px){.ct-mail{font-size:min(4.3vw,1.6rem)}.ct-grid{grid-template-columns:1fr}.contact h2{font-size:clamp(4.5rem,26vw,10rem)}}
@@ -231,6 +266,32 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 <div class="pre" aria-hidden="true"><span id="count">0</span><small>Mohammad Ali Khan, portfolio</small></div>
 <div class="cursor" aria-hidden="true"><span></span></div>
 <div class="prog" aria-hidden="true"></div>
+<div class="cform" id="cform" role="dialog" aria-modal="true" aria-label="Start a project" aria-hidden="true" data-lenis-prevent>
+ <button class="back" type="button" id="cfBack">← Close</button>
+ <div class="cf-wrap">
+  <div class="cf-intro">
+   <p class="d-tag">Start a project</p>
+   <h2 class="cf-title">Let’s <span class="ct-serif">talk.</span></h2>
+   <p class="d-lead">Tell me what you’re building and I’ll reply by email with how I’d approach it.</p>
+   <p class="cf-direct">Prefer email? <a href="mailto:mohammadalikhan6899h@gmail.com">mohammadalikhan6899h@gmail.com</a></p>
+  </div>
+  <form class="cf-form" id="cfForm" novalidate>
+   <fieldset class="cf-types"><legend>What do you need?</legend>
+    <label><input type="radio" name="type" value="Website" checked><span>Website</span></label>
+    <label><input type="radio" name="type" value="AI chatbot"><span>AI chatbot</span></label>
+    <label><input type="radio" name="type" value="Voice agent"><span>Voice agent</span></label>
+    <label><input type="radio" name="type" value="Automation"><span>Automation</span></label>
+    <label><input type="radio" name="type" value="Something else"><span>Something else</span></label>
+   </fieldset>
+   <div class="cf-field"><input id="cfName" name="name" type="text" placeholder=" " autocomplete="name" required><label for="cfName">Your name</label></div>
+   <div class="cf-field"><input id="cfEmail" name="email" type="email" placeholder=" " autocomplete="email" required><label for="cfEmail">Your email</label></div>
+   <div class="cf-field"><textarea id="cfMsg" name="message" rows="5" placeholder=" " required></textarea><label for="cfMsg">Tell me about your project</label></div>
+   <input type="text" name="botcheck" class="cf-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+   <div class="cf-actions"><button class="dl" type="submit">Send message <span class="ar" aria-hidden="true">↗</span></button><span class="cf-status" role="status" aria-live="polite"></span></div>
+   <p class="cf-note" id="cfNote"></p>
+  </form>
+ </div>
+</div>
 <div class="detail" id="detail" role="dialog" aria-modal="true" aria-label="Namaz Timings project" aria-hidden="true" data-lenis-prevent>
  <button class="back" type="button">← Back to work</button>
  <div class="d-wrap">
@@ -248,7 +309,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 </div>
 
 <a class="logo" href="#top" aria-label="Ali Khan, home"><span>Ali</span><b>Khan</b></a>
-<a class="cta" href="#contact">Let’s talk <span class="ar" aria-hidden="true">↗</span></a>
+<a class="cta" href="mailto:mohammadalikhan6899h@gmail.com">Let’s talk <span class="ar" aria-hidden="true">↗</span></a>
 
 <main id="top">
  <section class="stage">
@@ -332,6 +393,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 
  <section class="skills">
   <h2>Tools I use</h2>
+  <div class="tband" aria-hidden="true"><div class="sr tb1"><span>Next.js</span><span>React</span><span>Tailwind CSS</span><span>GSAP</span><span>Vercel</span><span>GitHub</span><span>Retell AI</span><span>Lovable</span></div><div class="sr tb2"><span>Lovable</span><span>Retell AI</span><span>GitHub</span><span>Vercel</span><span>GSAP</span><span>Tailwind CSS</span><span>React</span><span>Next.js</span></div></div>
   <div class="tg-grid"><div class="tg"><div class="tg-head"><span>01</span><h3>Build</h3></div><ul><li><b>Next.js</b><small>Framework</small></li><li><b>React</b><small>UI</small></li><li><b>Tailwind CSS</b><small>Styling</small></li></ul></div><div class="tg"><div class="tg-head"><span>02</span><h3>Motion</h3></div><ul><li><b>GSAP</b><small>Animation</small></li></ul></div><div class="tg"><div class="tg-head"><span>03</span><h3>Ship</h3></div><ul><li><b>Vercel</b><small>Hosting</small></li><li><b>GitHub</b><small>Version control</small></li></ul></div><div class="tg"><div class="tg-head"><span>04</span><h3>AI</h3></div><ul><li><b>Retell AI</b><small>Voice agents</small></li><li><b>Lovable</b><small>AI app builder</small></li></ul></div></div>
  </section>
 
@@ -341,6 +403,7 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
    <span class="ct-note">Websites · AI chatbots · Voice agents · Automation</span>
   </div>
   <h2 aria-label="Let’s talk."><span class="line"><span data-split>Let’s</span><span data-split class="ct-serif">talk.</span></span></h2>
+  <div class="cband" aria-hidden="true"><div class="sr cb1"><span>Say hello</span><span>Start a project</span><span>Share your idea</span><span>Let’s build it</span></div><div class="sr cb2"><span>Idea</span><span>Plan</span><span>Build</span><span>Launch</span></div></div>
   <div class="ct-grid">
    <div class="ct-left">
     <p class="ct-lead">Got an idea, a messy process or a site that needs to work harder? Tell me what you’re building and I’ll reply with how I’d approach it.</p>
@@ -406,6 +469,46 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
  addEventListener('keydown',function(e){if(e.key==='Escape')goBack();});
  addEventListener('hashchange',function(){var id=location.hash.slice(1);if(pages[id])openD(null,id);else closeD();});
  var h0=location.hash.slice(1);if(pages[h0])openD(null,h0);
+ /* Contact form tab. To receive messages straight in Gmail once this page is hosted on your own site, paste a free Web3Forms access key here. */
+ var KEY='',TO='mohammadalikhan6899h@gmail.com',cf=document.getElementById('cform'),cfForm=document.getElementById('cfForm'),cfOpen=false;
+ function openF(e,type){
+  if(cfOpen)return;cfOpen=true;
+  if(e&&(e.clientX||e.clientY))from={x:e.clientX,y:e.clientY};
+  if(type){var r=cfForm.querySelector('input[name=type][value="'+type+'"]');if(r)r.checked=true;}
+  cf.classList.add('open');cf.setAttribute('aria-hidden','false');cf.scrollTop=0;
+  if(lz)lz.stop();
+  if(ok){gsap.fromTo(cf,{clipPath:circ(0)},{clipPath:circ(150),duration:.9,ease:'power3.inOut'});
+   gsap.from('.cf-intro > *,.cf-form > *',{y:50,opacity:0,stagger:.07,duration:.8,ease:'power3.out',delay:.4,clearProps:'transform,opacity'});}
+  else cf.style.clipPath='none';
+  setTimeout(function(){var f=document.getElementById('cfName');if(f)f.focus({preventScroll:true});},ok?800:0);
+ }
+ function closeF(){
+  if(!cfOpen)return;cfOpen=false;
+  function done(){cf.classList.remove('open');cf.setAttribute('aria-hidden','true');cf.style.clipPath='';if(lz&&!det.classList.contains('open'))lz.start();}
+  if(ok)gsap.to(cf,{clipPath:circ(0),duration:.7,ease:'power3.inOut',onComplete:done});else done();
+ }
+ function openTab(u){var a=document.createElement('a');a.href=u;a.target='_blank';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();}
+ function showOpts(gm,mt,text){var n=document.getElementById('cfNote');n.textContent='';n.appendChild(document.createTextNode('Send it with: '));var g=document.createElement('a');g.className='cf-copy';g.href=gm;g.target='_blank';g.rel='noopener';g.textContent='Gmail';n.appendChild(g);n.appendChild(document.createTextNode(' · '));var m=document.createElement('a');m.className='cf-copy';m.href=mt;m.textContent='my email app';n.appendChild(m);n.appendChild(document.createTextNode(' · '));var b=document.createElement('button');b.type='button';b.className='cf-copy';b.textContent='copy the message';b.onclick=function(){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){say('Copied. Paste it into an email to '+TO);},function(){say('Select the text and copy it by hand.',true);});}else{say('Select the text and copy it by hand.',true);}};n.appendChild(b);}
+ function say(m,bad){var s=cfForm.querySelector('.cf-status');s.textContent=m;s.style.color=bad?'#FF8A73':'';}
+ function showCopy(text){var n=document.getElementById('cfNote');n.textContent='';n.appendChild(document.createTextNode('If your email app did not open, '));var b=document.createElement('button');b.type='button';b.className='cf-copy';b.textContent='copy the message';b.onclick=function(){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){say('Copied. Paste it into an email to '+TO);},function(){say('Select the text and copy it by hand.',true);});}else{say('Select the text and copy it by hand.',true);}};n.appendChild(b);n.appendChild(document.createTextNode(' and email it to '+TO+'.'));}
+ cfForm.addEventListener('submit',function(e){
+  e.preventDefault();
+  var fd=new FormData(cfForm),name=(fd.get('name')||'').trim(),email=(fd.get('email')||'').trim(),msg=(fd.get('message')||'').trim(),type=fd.get('type')||'Project';
+  var checks=[['cfName',!!name],['cfEmail',/^\S+@\S+\.\S+$/.test(email)],['cfMsg',!!msg]],bad=false;
+  checks.forEach(function(c){var good=c[1];document.getElementById(c[0]).parentNode.classList.toggle('err',!good);if(!good)bad=true;});
+  if(bad){say('Please fill in every field.',true);return;}
+  if(fd.get('botcheck'))return;
+  var subject=type+' project from '+name,body='Name: '+name+'\nEmail: '+email+'\nProject type: '+type+'\n\n'+msg;
+  function viaMail(auto){var gm='https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(TO)+'&su='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body),mt='mailto:'+TO+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);if(auto)openTab(gm);say(auto?'Your message is ready. Send it from the Gmail tab that just opened.':'Your message is ready. Choose how to send it below.');showOpts(gm,mt,body);}
+  if(!KEY){viaMail(true);return;}
+  say('Sending...');
+  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:KEY,subject:subject,from_name:name,name:name,email:email,message:msg,project_type:type})})
+   .then(function(r){return r.json();}).then(function(j){if(j&&j.success){say('Sent. I will reply by email.');cfForm.reset();document.getElementById('cfNote').textContent='';}else{viaMail(false);}}).catch(function(){viaMail(false);});
+ });
+ document.getElementById('cfBack').addEventListener('click',closeF);
+ addEventListener('keydown',function(e){if(e.key==='Escape'&&cfOpen)closeF();});
+ document.querySelectorAll('.cta,.biz').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();openF(e);});});
+ document.querySelectorAll('.ct-btn:not(.ghost),.ct-chips a').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();openF(e,a.classList.contains('ct-btn')?null:a.textContent.trim());});});
  if(!window.gsap||!window.ScrollTrigger||reduce){root.classList.add('no-anim');if(pre)pre.remove();return;}
  gsap.registerPlugin(ScrollTrigger);
 
@@ -475,9 +578,19 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
   gsap.to(s,{scale:.92,ease:'none',scrollTrigger:{trigger:steps[i+1],start:'top 85%',end:'top 25%',scrub:true}});
  });
 
- gsap.from('.tg',{y:50,opacity:0,stagger:.1,duration:.7,ease:'power3.out',clearProps:'transform,opacity',scrollTrigger:{trigger:'.tg-grid',start:'top 85%'}});
+ gsap.to('.tb1',{xPercent:-30,ease:'none',scrollTrigger:{trigger:'.tband',start:'top bottom',end:'bottom top',scrub:true}});
+ gsap.fromTo('.tb2',{xPercent:-30},{xPercent:0,ease:'none',scrollTrigger:{trigger:'.tband',start:'top bottom',end:'bottom top',scrub:true}});
+ gsap.utils.toArray('.tg').forEach(function(g,i){
+  gsap.fromTo(g,{y:90+i*20,opacity:0},{y:0,opacity:1,ease:'none',scrollTrigger:{trigger:g,start:'top 100%',end:'top 65%',scrub:true}});
+  gsap.fromTo(g.querySelectorAll('li b'),{x:i%2?70:-70},{x:0,ease:'none',stagger:.1,scrollTrigger:{trigger:g,start:'top 90%',end:'top 40%',scrub:true}});
+ });
 
- gsap.to('.contact .ch',{yPercent:0,duration:1.1,stagger:.05,ease:'power4.out',scrollTrigger:{trigger:'.contact',start:'top 65%'}});
+ gsap.to('.contact .ch',{yPercent:0,stagger:.06,ease:'none',scrollTrigger:{trigger:'.contact',start:'top 80%',end:'top 20%',scrub:true}});
+ gsap.to('.cb1',{xPercent:-30,ease:'none',scrollTrigger:{trigger:'.contact',start:'top bottom',end:'bottom bottom',scrub:true}});
+ gsap.fromTo('.cb2',{xPercent:-30},{xPercent:0,ease:'none',scrollTrigger:{trigger:'.contact',start:'top bottom',end:'bottom bottom',scrub:true}});
+ gsap.fromTo('.ct-chips',{x:-80,opacity:0},{x:0,opacity:1,ease:'none',scrollTrigger:{trigger:'.ct-grid',start:'top 95%',end:'top 55%',scrub:true}});
+ gsap.fromTo('.ct-card',{y:120,rotate:-3},{y:0,rotate:0,ease:'none',scrollTrigger:{trigger:'.ct-grid',start:'top 100%',end:'top 50%',scrub:true}});
+ gsap.fromTo('.ct-lead,.ct-left .ct-label',{y:40,opacity:0},{y:0,opacity:1,stagger:.1,ease:'none',scrollTrigger:{trigger:'.ct-grid',start:'top 95%',end:'top 60%',scrub:true}});
 
  if(matchMedia('(pointer: fine)').matches){
   var c=document.querySelector('.cursor'),lab=c.firstElementChild;
