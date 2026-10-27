@@ -213,6 +213,22 @@ html.lenis,html.lenis body{height:auto}
 .cf-note{margin:0;font-size:.95rem;opacity:.75}
 .cf-copy{background:none;border:0;color:var(--accent);font:inherit;text-decoration:underline;cursor:pointer;padding:0}
 @media (max-width:819px){.cf-wrap{grid-template-columns:1fr}}
+.wpage{position:fixed;inset:0;z-index:78;background:var(--bg);color:var(--fg);overflow-y:auto;overscroll-behavior:contain;visibility:hidden;clip-path:circle(0% at 50% 50%)}
+.wpage.open{visibility:visible}
+.wp-wrap{max-width:1300px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 7rem) 5vw 6rem}
+.wp-title{font-size:clamp(3.4rem,10vw,9rem)}
+.wp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:3rem 2.5rem;margin-top:3.5rem}
+.wp-tile{display:block;text-align:left;background:none;border:0;padding:0;color:inherit;font:inherit;cursor:pointer}
+.wp-img{display:block;position:relative;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:#2B3A22}
+.wp-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.wp-tile:hover .wp-img img,.wp-tile:focus-visible .wp-img img{transform:scale(1.06)}
+.wp-tile:focus-visible{outline:3px solid var(--pop);outline-offset:6px;border-radius:14px}
+.wp-num{position:absolute;left:1rem;top:1rem;z-index:2;background:var(--accent);color:var(--on-accent);font:700 .9rem/1 var(--body);padding:.5rem .7rem;border-radius:8px}
+.wp-meta{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-top:1rem}
+.wp-meta b{font:800 clamp(1.6rem,2.6vw,2.4rem)/.95 var(--display);letter-spacing:-.03em}
+.wp-meta i{font-style:normal;opacity:.7}
+.wp-desc{display:block;margin-top:.4rem;opacity:.75;max-width:44ch}
+@media (max-width:819px){.wp-grid{grid-template-columns:1fr}}
 @media (max-width:819px){.tg-grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.tg li{transition:none}}
 .chips{display:flex;flex-wrap:wrap;gap:1rem}
@@ -266,6 +282,15 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
 <div class="pre" aria-hidden="true"><span id="count">0</span><small>Mohammad Ali Khan, portfolio</small></div>
 <div class="cursor" aria-hidden="true"><span></span></div>
 <div class="prog" aria-hidden="true"></div>
+<div class="wpage" id="wpage" role="dialog" aria-modal="true" aria-label="All work" aria-hidden="true" data-lenis-prevent>
+ <button class="back" type="button" id="wpBack">← Close</button>
+ <div class="wp-wrap">
+  <p class="d-tag">Selected projects</p>
+  <h2 class="wp-title">Work</h2>
+  <p class="d-lead">Games, websites and AI projects I’ve built. Click any project to open it.</p>
+  <div class="wp-grid" id="wpGrid"></div>
+ </div>
+</div>
 <div class="cform" id="cform" role="dialog" aria-modal="true" aria-label="Start a project" aria-hidden="true" data-lenis-prevent>
  <button class="back" type="button" id="cfBack">← Close</button>
  <div class="cf-wrap">
@@ -509,6 +534,43 @@ footer{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin
  addEventListener('keydown',function(e){if(e.key==='Escape'&&cfOpen)closeF();});
  document.querySelectorAll('.cta,.biz').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();openF(e);});});
  document.querySelectorAll('.ct-btn:not(.ghost),.ct-chips a').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();openF(e,a.classList.contains('ct-btn')?null:a.textContent.trim());});});
+ var wp=document.getElementById('wpage'),wpGrid=document.getElementById('wpGrid'),wpOpen=false;
+ function buildWork(){
+  if(wpGrid.children.length)return;
+  document.querySelectorAll('[data-project]').forEach(function(c,i){
+   var id=c.dataset.project,src=c.querySelector('img'),title=c.querySelector('h3').textContent;
+   var t=document.createElement('button');t.type='button';t.className='wp-tile';t.setAttribute('aria-label','Open '+title);
+   var im=document.createElement('span');im.className='wp-img';
+   var n=document.createElement('span');n.className='wp-num';n.textContent=('0'+(i+1)).slice(-2);
+   var ig=document.createElement('img');ig.src=src.src;ig.alt='';ig.style.objectPosition=getComputedStyle(src).objectPosition;
+   im.appendChild(n);im.appendChild(ig);
+   var meta=document.createElement('span');meta.className='wp-meta';
+   var b=document.createElement('b');b.textContent=title;
+   var y=document.createElement('i');y.textContent=c.querySelector('.card-info > span').textContent;
+   meta.appendChild(b);meta.appendChild(y);
+   var d=document.createElement('span');d.className='wp-desc';d.textContent=c.querySelector('p').textContent;
+   t.appendChild(im);t.appendChild(meta);t.appendChild(d);
+   t.addEventListener('click',function(e){openD(e,id);});
+   wpGrid.appendChild(t);
+  });
+ }
+ function openW(e){
+  if(wpOpen)return;wpOpen=true;buildWork();
+  if(e&&(e.clientX||e.clientY))from={x:e.clientX,y:e.clientY};
+  wp.classList.add('open');wp.setAttribute('aria-hidden','false');wp.scrollTop=0;
+  if(lz)lz.stop();
+  if(ok){gsap.fromTo(wp,{clipPath:circ(0)},{clipPath:circ(150),duration:.9,ease:'power3.inOut'});
+   gsap.from('.wp-wrap > .d-tag,.wp-title,.wp-wrap > .d-lead,.wp-tile',{y:60,opacity:0,stagger:.08,duration:.8,ease:'power3.out',delay:.4,clearProps:'transform,opacity'});}
+  else wp.style.clipPath='none';
+ }
+ function closeW(){
+  if(!wpOpen)return;wpOpen=false;
+  function done(){wp.classList.remove('open');wp.setAttribute('aria-hidden','true');wp.style.clipPath='';if(lz&&!det.classList.contains('open')&&!cfOpen)lz.start();}
+  if(ok)gsap.to(wp,{clipPath:circ(0),duration:.7,ease:'power3.inOut',onComplete:done});else done();
+ }
+ document.getElementById('wpBack').addEventListener('click',closeW);
+ addEventListener('keydown',function(e){if(e.key==='Escape'&&wpOpen&&!det.classList.contains('open')&&!cfOpen)closeW();});
+ document.querySelectorAll('.col.l a[href="#work"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();openW(e);});});
  if(!window.gsap||!window.ScrollTrigger||reduce){root.classList.add('no-anim');if(pre)pre.remove();return;}
  gsap.registerPlugin(ScrollTrigger);
 
